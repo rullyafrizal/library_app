@@ -1,64 +1,103 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Project Overview
+Library App project is my personal laravel project which implement SOLID design pattern
+and caching data using Redis
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Design Patterns
+In this project I'm using `SOLID` design pattern, it is a very popular pattern that has been used
+by many developers especially in a big scale project that require high maintainable code.
 
-## About Laravel
+To be spesific I am using `repository layer (DAO)` and `service layer (Facade)` to separate data access and business logic from the controller 
+in order to make the controllers have single responsibility, which is only to be the gate of request and response. Note that it may seem over 
+engineering to be used in this simple project, but it is very 
+useful when applied to large scale application.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+I also use Redis data caching in order to make load
+performance becomes faster when fetching the same data over and over.
+Note that the cached data will be flushed everytime the data being modified.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+To make the error more readable to the user, i am handling the error
+in `App\Exceptions\Handler.php` class and disable the debug mode in .env file.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## API endpoint quick guide
+| Route  | HTTP Method   | Handler |
+| ------------- | -------------  | ------------- |
+| /api/v1/authors  | GET   | AuthorController@index  |
+| /api/v1/authors/{id}  | GET   | AuthorController@show  |
+| /api/v1/authors/{id}  | PUT/PATCH   | AuthorController@update  |
+| /api/v1/authors/{id}  | DELETE   | AuthorController@destroy  |
+| ------------- | -------------  | ------------- |
+| /api/v1/books/  | GET    | BookController@index  |
+| /api/v1/books/{id}  | GET    | BookController@show  |
+| /api/v1/books/  | POST    | BookController@store  |
+| /api/v1/books/{id}  | PUT   | BookController@update  |
+| /api/v1/books/{id}  | DELETE    | BookController@destroy  |
+| /api/v1/books/{id}/upload-cover  | PATCH    | BookController@uploadCover |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+[Full API Endpoint Documentation Link](https://documenter.getpostman.com/view/14542872/UV5RkKLi)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
+## Installation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+1. Clone the repository
+    ```bash
+    git clone https://github.com/rullyafrizal/api_informasi_buku.git
+    ```
 
-## Contributing
+2. Use the package manager [composer](https://getcomposer.org/download/) to install vendor.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    ```bash
+    composer install
+    ```
 
-## Code of Conduct
+3. Configure .env files, => copy .env.example and rename it to .env
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. Set your database configuration in .env files
 
-## Security Vulnerabilities
+5. Generate APP_KEY
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    ```bash
+    php artisan key:generate
+    ```
 
-## License
+6. Run Migration
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    ```bash
+    php artisan migrate
+    ```
+   
+7. Run Seeder
+    ```bash
+    php artisan db:seed
+    ```
+
+8. Run docker-compose to install redis via docker (optional)
+    ```bash
+    docker-compose up -d
+    ```
+    or for V2
+   ```bash
+    docker compose up -d
+    ```
+
+10. To make uploaded files accessible from the web, you should create a symbolic link from public/storage to storage/app/public.
+
+     ```bash
+     php artisan storage:link
+     ```
+
+11. Run Laravel server
+
+     ```bash
+     php artisan serve
+     ```
+12. (Optional) if you want to trace your bug easily i had installed
+    this app with sentry bug tracking, in order to do so just fill your DSN in .env file
+
+### Database Design
+![Image of Database](/public/img/erd.png)
+
+### Demo Video
+https://www.loom.com/share/876a5c57b0de4cabbc77a1d54fae3d0b

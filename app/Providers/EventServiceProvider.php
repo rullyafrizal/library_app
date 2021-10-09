@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\GetRequest;
+use App\Listeners\CacheRequest;
+use App\Models\Author;
+use App\Models\Book;
+use App\Observers\AuthorObserver;
+use App\Observers\BookObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -27,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Author::observe(AuthorObserver::class);
+        Book::observe(BookObserver::class);
     }
 }
