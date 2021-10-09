@@ -101,3 +101,6 @@ in `App\Exceptions\Handler.php` class and disable the debug mode in .env file.
 
 ### Demo Video
 https://www.loom.com/share/876a5c57b0de4cabbc77a1d54fae3d0b
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
